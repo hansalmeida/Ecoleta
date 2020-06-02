@@ -1,15 +1,11 @@
 import express, { Request, Response } from "express"
+import routes from "./routes"
 
 const app = express()
 
 app.use(express.json())
 
-app.get("/", (req: Request, res: Response) => {
-  res.json({
-    name: "ハンス",
-    message: "Next Level Weekへようこそ！"
-  })
-})
+app.use(routes)
 
 const port = 3333
 app.listen(port, () => console.log(`listening on ${port}`))
