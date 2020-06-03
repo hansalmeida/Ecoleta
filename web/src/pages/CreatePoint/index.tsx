@@ -1,13 +1,27 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import "./styles.scss"
 import logo from "../../assets/logo.svg"
 import { Link } from "react-router-dom"
 import { FiArrowLeft } from "react-icons/fi"
 import { Map, TileLayer, Marker } from "react-leaflet"
+import api from "../../services/api"
 
 interface ICreatePointProps {}
+interface IItems {
+  id: number
+  title: string
+  image_url: string
+}
 
 const CreatePoint: React.FC<ICreatePointProps> = () => {
+  const [items, setItems] = useState<IItems[]>([])
+
+  useEffect(() => {
+    api.get("items").then((response) => {
+      setItems(response.data)
+    })
+  }, [])
+
   return (
     <div id="page-create-point">
       <header>
@@ -82,17 +96,12 @@ const CreatePoint: React.FC<ICreatePointProps> = () => {
           </legend>
 
           <ul className="items-grid">
-            {[1, 2, 3, 4, 5, 6].map((item) => {
-              return (
-                <li>
-                  <img
-                    src="http://localhost:3333/uploads/oleo.svg"
-                    alt="oleo"
-                  />
-                  <span>Óleo de cozinha</span>
-                </li>
-              )
-            })}
+            {items.map((item) => (
+              <li key={item.id}>
+                <img src={item.image_url} alt={item.title} />
+                <span>{item.title}</span>
+              </li>
+            ))}
           </ul>
         </fieldset>
 
