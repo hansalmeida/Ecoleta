@@ -1,7 +1,7 @@
-import React, { useEffect, useState, ChangeEvent } from "react"
+import React, { useEffect, useState, ChangeEvent, FormEvent } from "react"
 import "./styles.scss"
 import logo from "../../assets/logo.svg"
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import { FiArrowLeft } from "react-icons/fi"
 import { Map, TileLayer, Marker } from "react-leaflet"
 import api from "../../services/api"
@@ -41,6 +41,7 @@ const CreatePoint: React.FC<ICreatePointProps> = () => {
     whatsapp: "",
   })
   const [selectedItems, setSelectedItems] = useState<number[]>([])
+  const history = useHistory()
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -107,6 +108,35 @@ const CreatePoint: React.FC<ICreatePointProps> = () => {
     }
   }
 
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault()
+
+    const { name, email, whatsapp } = formData
+    const uf = selectedUf
+    const city = selectedCity
+    const [latitude, longitude] = selectedPosition
+    const items = selectedItems
+
+    const data = {
+      name,
+      email,
+      whatsapp,
+      uf,
+      city,
+      latitude,
+      longitude,
+      items,
+    }
+
+    try {
+      await api.post("points", data)
+      alert("Ponto de coleta criado.")
+      history.push("/")
+    } catch (error) {
+      alert("Erro ao criar ponto de coleta, tente novamente.")
+    }
+  }
+
   return (
     <div id="page-create-point">
       <header>
@@ -117,7 +147,7 @@ const CreatePoint: React.FC<ICreatePointProps> = () => {
         </Link>
       </header>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         <h1>
           Cadastro do <br /> ponto de coleta
         </h1>
