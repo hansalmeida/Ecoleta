@@ -2,6 +2,7 @@ import React from "react"
 import "./styles.scss"
 import logo from "../../assets/logo.svg"
 import { FiLogIn } from "react-icons/fi"
+import { Link } from "react-router-dom"
 
 interface IHomeProps {}
 
@@ -19,12 +20,12 @@ const Home: React.FC<IHomeProps> = () => {
             Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente.
           </p>
 
-          <a href="/cadastro">
+          <Link to="/create-point">
             <span>
               <FiLogIn />
             </span>
             <strong>Cadastre um ponto de coleta</strong>
-          </a>
+          </Link>
         </main>
       </div>
     </div>

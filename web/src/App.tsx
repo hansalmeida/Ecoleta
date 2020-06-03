@@ -1,13 +1,9 @@
 import React from "react"
 import "./App.scss"
-import Home from "./pages/Home"
+import Routes from "./routes"
 
 function App() {
-  return (
-    <div className="App">
-      <Home />
-    </div>
-  )
+  return <Routes />
 }
 
 export default App
