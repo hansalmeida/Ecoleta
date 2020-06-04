@@ -1,14 +1,57 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { View, Image, StyleSheet, Text, ImageBackground } from "react-native"
 import { RectButton } from "react-native-gesture-handler"
 import { Feather as Icon } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
+import RNPickerSelect from "react-native-picker-select"
+import Axios from "axios"
+
+interface IIbgeUfResponse {
+  sigla: string
+}
+interface IIbgeCityResponse {
+  nome: string
+}
 
 const Home = () => {
+  const [ufs, setUfs] = useState<string[]>([])
+  const [selectedUf, setSelectedUf] = useState("0")
+  const [cities, setCities] = useState<string[]>([])
+  const [selectedCity, setSelectedCity] = useState("0")
+
   const navigation = useNavigation()
 
-  function handleNavigateToPoints() {
-    navigation.navigate("Points")
+  useEffect(() => {
+    Axios.get<IIbgeUfResponse[]>(
+      "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
+    ).then((response) => {
+      const ufInitials = response.data.map((uf) => uf.sigla)
+      setUfs(ufInitials)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (selectedUf === "0") {
+      return
+    }
+    Axios.get<IIbgeCityResponse[]>(
+      `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`
+    ).then((response) => {
+      const cityNames = response.data.map((city) => city.nome)
+      setCities(cityNames)
+    })
+  }, [selectedUf])
+
+  function handleNavigateToPoints(uf: string, city: string) {
+    navigation.navigate("Points", { uf, city })
+  }
+
+  function handleSelectUf(uf: string) {
+    setSelectedUf(uf)
+  }
+
+  function handleSelectedCity(city: string) {
+    setSelectedCity(city)
   }
 
   return (
@@ -28,7 +71,24 @@ const Home = () => {
       </View>
 
       <View style={styles.footer}>
-        <RectButton style={styles.button} onPress={handleNavigateToPoints}>
+        {ufs && (
+          <RNPickerSelect
+            onValueChange={(uf) => handleSelectUf(uf)}
+            items={ufs.map((uf) => ({ label: uf, value: uf }))}
+            placeholder={{ label: "Estado - UF" }}
+          />
+        )}
+        {cities && (
+          <RNPickerSelect
+            onValueChange={(city) => handleSelectedCity(city)}
+            items={cities.map((city) => ({ label: city, value: city }))}
+            placeholder={{ label: "Cidade" }}
+          />
+        )}
+        <RectButton
+          style={styles.button}
+          onPress={() => handleNavigateToPoints(selectedUf, selectedCity)}
+        >
           <View style={styles.buttonIcon}>
             <Text>
               <Icon name="arrow-right" color="#fff" size={24} />
