@@ -1,16 +1,49 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { View, Text, StyleSheet, Image, SafeAreaView } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { Feather as Icon, FontAwesome } from "@expo/vector-icons"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useRoute } from "@react-navigation/native"
 import { RectButton } from "react-native-gesture-handler"
 import Constants from "expo-constants"
+import api from "../../services/api"
+
+interface IParams {
+  point_id: number
+}
+
+interface IData {
+  point: {
+    image: string
+    name: string
+    email: string
+    whatsapp: string
+    city: string
+    uf: string
+  }
+  items: {
+    title: string
+  }[]
+}
 
 const Detail = () => {
+  const [data, setData] = useState<IData>({} as IData)
   const navigation = useNavigation()
+  const route = useRoute()
+
+  const routeParams = route.params as IParams
+
+  useEffect(() => {
+    api.get(`points/${routeParams.point_id}`).then((response) => {
+      setData(response.data)
+    })
+  }, [])
 
   function handleNavigateBack() {
     navigation.goBack()
+  }
+
+  if (!data.point) {
+    return null
   }
 
   return (
@@ -23,17 +56,18 @@ const Detail = () => {
         <Image
           style={styles.pointImage}
           source={{
-            uri:
-              "https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
+            uri: data.point.image,
           }}
         />
 
-        <Text style={styles.pointName}>Mercado do seu zé</Text>
-        <Text style={styles.pointItems}>Lâmpadas, Óleo</Text>
+        <Text style={styles.pointName}>{data.point.name}</Text>
+        <Text style={styles.pointItems}>
+          {data.items.map((item) => item.title).join(", ")}
+        </Text>
 
         <View style={styles.address}>
-          <Text style={styles.addressTitle}>Endereço</Text>
-          <Text style={styles.addressContent}>Rua do seu zé</Text>
+          <Text style={styles.addressTitle}>{data.point.city}</Text>
+          <Text style={styles.addressContent}>{data.point.uf}</Text>
         </View>
       </View>
 
