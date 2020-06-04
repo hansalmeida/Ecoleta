@@ -80,10 +80,6 @@ const Points = () => {
       })
   }, [selectedItems])
 
-  useEffect(() => {
-    console.log(route.params)
-  }, [])
-
   function handleNavigateBack() {
     navigation.goBack()
   }
