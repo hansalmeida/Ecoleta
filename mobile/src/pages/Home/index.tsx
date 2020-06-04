@@ -76,6 +76,8 @@ const Home = () => {
             onValueChange={(uf) => handleSelectUf(uf)}
             items={ufs.map((uf) => ({ label: uf, value: uf }))}
             placeholder={{ label: "Estado - UF" }}
+            style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
         )}
         {cities && (
@@ -83,6 +85,8 @@ const Home = () => {
             onValueChange={(city) => handleSelectedCity(city)}
             items={cities.map((city) => ({ label: city, value: city }))}
             placeholder={{ label: "Cidade" }}
+            style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
         )}
         <RectButton
@@ -167,6 +171,31 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontFamily: "Roboto_500Medium",
     fontSize: 16,
+  },
+})
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 4,
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    marginVertical: 5,
+    borderWidth: 0.5,
+    borderColor: "purple",
+    borderRadius: 8,
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
   },
 })
 
