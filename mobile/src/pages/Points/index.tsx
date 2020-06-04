@@ -1,9 +1,11 @@
 import React from "react"
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, Text, Image } from "react-native"
 import Constants from "expo-constants"
-import { TouchableOpacity } from "react-native-gesture-handler"
+import { TouchableOpacity, ScrollView } from "react-native-gesture-handler"
 import { Feather as Icon } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
+import MapView, { Marker } from "react-native-maps"
+import { SvgUri } from "react-native-svg"
 
 const Points = () => {
   const navigation = useNavigation()
@@ -11,13 +13,79 @@ const Points = () => {
   function handleNavigateBack() {
     navigation.goBack()
   }
+  function handleNavigateToDetail() {
+    navigation.navigate("Detail")
+  }
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handleNavigateBack}>
-        <Icon name="arrow-left" size={20} color="#34cb79" />
-      </TouchableOpacity>
-    </View>
+    <>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={handleNavigateBack}>
+          <Icon name="arrow-left" size={20} color="#34cb79" />
+        </TouchableOpacity>
+
+        <Text style={styles.title}>Bem vindo.</Text>
+        <Text style={styles.description}>
+          Encontre um ponto de coleta no mapa.
+        </Text>
+
+        <View style={styles.mapContainer}>
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: -12.9335002,
+              longitude: -38.4113509,
+              latitudeDelta: 0.014,
+              longitudeDelta: 0.014,
+            }}
+          >
+            <Marker
+              style={styles.mapMarker}
+              onPress={handleNavigateToDetail}
+              coordinate={{
+                latitude: -12.9335002,
+                longitude: -38.4113509,
+              }}
+            >
+              <View style={styles.mapMarkerContainer}>
+                <Image
+                  style={styles.mapMarkerImage}
+                  source={{
+                    uri:
+                      "https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
+                  }}
+                />
+                <Text style={styles.mapMarkerTitle}>Mercado</Text>
+              </View>
+            </Marker>
+          </MapView>
+        </View>
+      </View>
+      <View style={styles.itemsContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: 20,
+          }}
+        >
+          {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.item}
+              onPress={() => {}}
+            >
+              <SvgUri
+                width={42}
+                height={42}
+                uri="http://192.168.0.12:3333/uploads/lampadas.svg"
+              />
+              <Text style={styles.itemTitle}>Lâmpadas</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+    </>
   )
 }
 
