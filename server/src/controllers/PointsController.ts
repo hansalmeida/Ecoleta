@@ -24,7 +24,7 @@ class PointsController {
       }
     })
 
-    return res.json(points)
+    return res.json(serializedPoints)
   }
   async show(req: Request, res: Response) {
     const { id } = req.params
