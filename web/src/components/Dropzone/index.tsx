@@ -7,11 +7,14 @@ const Dropzone = () => {
   const onDrop = useCallback((acceptedFiles) => {
     console.log(acceptedFiles)
   }, [])
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: "image/*",
+  })
 
   return (
     <div className="dropzone" {...getRootProps()}>
-      <input {...getInputProps()} />
+      <input {...getInputProps()} accept="image/*" />
       {isDragActive ? (
         <p>
           <FiUpload />
