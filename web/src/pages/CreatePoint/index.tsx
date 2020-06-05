@@ -7,6 +7,7 @@ import { Map, TileLayer, Marker } from "react-leaflet"
 import api from "../../services/api"
 import Axios from "axios"
 import { LeafletMouseEvent } from "leaflet"
+import Dropzone from "../../components/Dropzone"
 
 interface ICreatePointProps {}
 interface IItems {
@@ -151,6 +152,8 @@ const CreatePoint: React.FC<ICreatePointProps> = () => {
         <h1>
           Cadastro do <br /> ponto de coleta
         </h1>
+
+        <Dropzone />
 
         <fieldset>
           <legend>
